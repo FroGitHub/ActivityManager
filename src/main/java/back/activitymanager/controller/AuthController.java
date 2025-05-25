@@ -8,10 +8,7 @@ import back.activitymanager.security.UserService;
 import back.activitymanager.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,12 +18,12 @@ public class AuthController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public UserResponseLoginDto login(@RequestBody @Valid UserLoginDto userLoginDto) {
         return authenticationService.authenticate(userLoginDto);
     }
 
-    @GetMapping("/registration")
+    @PostMapping("/registration")
     public UserResponseDto register(@RequestBody @Valid UserRegistrationRequestDto request) {
         return userService.register(request);
     }
