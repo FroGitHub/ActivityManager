@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: 03-create-users-roles-table
+      author: andriy
+      changes:
+        - createTable:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_users_roles_user
+                    references: users(id)
+                    deleteCascade: true
+              - column:
+                  name: role_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_users_roles_role
+                    references: roles(id)
+                    deleteCascade: true

@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: 04-insert-users
+      author: andriy
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: email
+                  value: "admin@gmail.com"
+              - column:
+                  name: password
+                  value: "$2a$10$tsXTqLug0brd6r.1.K8T2uGvoNSOK5RzeA6Yq6lZi/32wTfA6YIwe"
+              - column:
+                  name: phone_number
+                  value: "+380999999999"
+              - column:
+                  name: first_name
+                  value: "admin"
+              - column:
+                  name: last_name
+                  value: "admin"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: phone_number
+                  value: "+380999999999"
+              - column:
+                  name: password
+                  value: "$2a$10$tsXTqLug0brd6r.1.K8T2uGvoNSOK5RzeA6Yq6lZi/32wTfA6YIwe"
+              - column:
+                  name: email
+                  value: "user@example.com"
+              - column:
+                  name: first_name
+                  value: "user"
+              - column:
+                  name: last_name
+                  value: "user"
