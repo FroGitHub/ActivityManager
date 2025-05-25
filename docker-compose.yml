@@ -1,39 +1,37 @@
+version: '3.8'
+
 services:
   mysqldb:
-    platform: linux/arm64
-    image: mysql
-    restart: unless-stopped
-    env_file: .env
+    image: mysql:8.3
+    container_name: mysqldb
+    restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=$MYSQLDB_PASSWORD
-      - MYSQL_PASSWORD=$MYSQLDB_PASSWORD
-      - MYSQL_DATABASE=$MYSQLDB_DATABASE
+      MYSQL_ROOT_PASSWORD: ${MYSQLDB_PASSWORD}
+      MYSQL_DATABASE: ${MYSQLDB_DATABASE}
     ports:
-      - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
-    healthcheck:
-      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -u$MYSQLDB_USERNAME -p$MYSQLDB_PASSWORD" ]
-      interval: 30s
-      timeout: 30s
-      retries: 3
-
+      - "${MYSQLDB_LOCAL_PORT}:${MYSQLDB_DOCKER_PORT}"
+    volumes:
+      - mysqldata:/var/lib/mysql
+    command: --innodb-use-native-aio=0  # прибирає AIO-помилку
 
   app:
-    depends_on:
-      mysqldb:
-        condition: service_healthy
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: activity-app
     restart: on-failure
-    image: task-management
-    build: .
-    env_file: .env
-    ports:
-      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
-      - $DEBUG_PORT:$DEBUG_PORT
     environment:
-      SPRING_APPLICATION_JSON: '{
-        "spring.datasource.url"  : "jdbc:mysql://mysqldb:$MYSQLDB_DOCKER_PORT/$MYSQLDB_DATABASE?useSSL=false&allowPublicKeyRetrieval=true",
-        "spring.datasource.username" : "$MYSQLDB_USERNAME",
-        "spring.datasource.password" : "$MYSQLDB_PASSWORD",
-        "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQL8Dialect"
-      }'
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:${MYSQLDB_DOCKER_PORT}/${MYSQLDB_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: ${MYSQLDB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQLDB_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${DEBUG_PORT}
+    ports:
+      - "${SPRING_LOCAL_PORT}:${SPRING_DOCKER_PORT}"
+      - "${DEBUG_PORT}:${DEBUG_PORT}"
+    depends_on:
+      - mysqldb
 
-      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:$DEBUG_PORT"
+volumes:
+  mysqldata:
