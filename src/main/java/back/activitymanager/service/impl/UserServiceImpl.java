@@ -1,4 +1,4 @@
-package back.activitymanager.security.impl;
+package back.activitymanager.service.impl;
 
 import back.activitymanager.dto.user.UserRegistrationRequestDto;
 import back.activitymanager.dto.user.UserResponseDto;
@@ -12,7 +12,7 @@ import back.activitymanager.model.Role;
 import back.activitymanager.model.User;
 import back.activitymanager.repository.RoleRepository;
 import back.activitymanager.repository.UserRepository;
-import back.activitymanager.security.UserService;
+import back.activitymanager.service.UserService;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;

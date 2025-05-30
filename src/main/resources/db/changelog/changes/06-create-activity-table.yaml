@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      author: andriy
+      id: 06-create-activity-table
+      changes:
+        - createTable:
+            tableName: activities
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: current_number_of_people
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: max_number_of_people
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: location
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_deleted
+                  type: TINYINT(1)
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_users_activities_user
+                    references: users(id)
+                    deleteCascade: true
+                    nullable: false
+              - column:
+                  name: local_date_time
+                  type: datetime(6)
+                  constraints:
+                    nullable: false

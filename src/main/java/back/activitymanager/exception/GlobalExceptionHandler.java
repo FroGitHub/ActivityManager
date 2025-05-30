@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -62,5 +63,19 @@ public class GlobalExceptionHandler {
                 "An unexpected error occurred: "
                         + ex.getMessage(),
                 HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleDataIntegrityViolation(
+            DataIntegrityViolationException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body("Data conflict: " + ex.getMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleNoAccessException(
+            NoAccessException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body("No access: " + ex.getMessage());
     }
 }

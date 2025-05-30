@@ -1,5 +1,6 @@
 package back.activitymanager.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,9 +9,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
@@ -49,6 +54,23 @@ public class User implements UserDetails {
     )
     private Set<Role> roles;
 
+    @OneToMany(mappedBy = "author", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Activity> authoredActivities = new ArrayList<>();
+
+    @Setter(AccessLevel.PRIVATE)
+    @ManyToMany(mappedBy = "participants", cascade = CascadeType.PERSIST)
+    private List<Activity> participatingActivities = new ArrayList<>();
+
+    public void addActivity(Activity activity) {
+        if (!participatingActivities.contains(activity)) {
+            participatingActivities.add(activity);
+        }
+    }
+
+    public void removeActivity(Activity activity) {
+        participatingActivities.remove(activity);
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
@@ -83,4 +105,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return !isDeleted;
     }
+
 }

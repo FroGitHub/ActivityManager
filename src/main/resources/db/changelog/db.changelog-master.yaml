@@ -9,3 +9,7 @@ databaseChangeLog:
       file: db/changelog/changes/04-insert-users.yaml
   - include:
       file: db/changelog/changes/05-insert-roles.yaml
+  - include:
+      file: db/changelog/changes/06-create-activity-table.yaml
+  - include:
+      file: db/changelog/changes/07-create-users-activities-table.yaml

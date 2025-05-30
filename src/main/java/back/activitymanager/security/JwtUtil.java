@@ -1,4 +1,4 @@
-package back.activitymanager.service;
+package back.activitymanager.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

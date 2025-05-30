@@ -1,6 +1,6 @@
 package back.activitymanager.config;
 
-import back.activitymanager.service.JwtAuthenticationFilter;
+import back.activitymanager.security.JwtAuthenticationFilter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
