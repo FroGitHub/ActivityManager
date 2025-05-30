@@ -1,4 +1,4 @@
-package back.activitymanager.service;
+package back.activitymanager.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

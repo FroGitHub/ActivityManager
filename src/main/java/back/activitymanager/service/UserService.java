@@ -1,4 +1,4 @@
-package back.activitymanager.security;
+package back.activitymanager.service;
 
 import back.activitymanager.dto.user.UserRegistrationRequestDto;
 import back.activitymanager.dto.user.UserResponseDto;

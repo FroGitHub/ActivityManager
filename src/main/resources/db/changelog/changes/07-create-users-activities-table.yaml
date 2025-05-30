@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      author: andriy
+      id: 07-create-users-activities-table
+      changes:
+        - createTable:
+            tableName: users_activities
+            columns:
+              - column:
+                  name: activity_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_activities_users_activity
+                    references: activities(id)
+                    deleteCascade: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_activities_users_user
+                    references: users(id)
+                    deleteCascade: true
+                    nullable: false
