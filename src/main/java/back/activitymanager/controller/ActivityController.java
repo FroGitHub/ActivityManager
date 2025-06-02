@@ -5,6 +5,7 @@ import back.activitymanager.dto.activity.ActivityDto;
 import back.activitymanager.service.ActivityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,7 @@ public class ActivityController {
     @ResponseStatus(HttpStatus.CREATED)
     public ActivityDto createActivity(
             Authentication authentication,
-            @RequestBody ActivityCreateRequestDto createRequestDto) {
+            @RequestBody @Valid ActivityCreateRequestDto createRequestDto) {
         return activityService.createActivity(
                 authentication,
                 createRequestDto);
