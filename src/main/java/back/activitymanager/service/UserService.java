@@ -19,4 +19,6 @@ public interface UserService {
             UserUpdateRequestDto requestDto);
 
     UserWithRoleDto updateUserRole(Long id, UserUpdateRoleRequestDto requestDto);
+
+    void deleteCurrentUser(Authentication authentication);
 }
