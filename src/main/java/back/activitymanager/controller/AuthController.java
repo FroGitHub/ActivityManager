@@ -6,11 +6,12 @@ import back.activitymanager.dto.user.UserResponseDto;
 import back.activitymanager.dto.user.UserResponseLoginDto;
 import back.activitymanager.security.AuthenticationService;
 import back.activitymanager.service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,9 +26,8 @@ public class AuthController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public UserResponseLoginDto login(
-            @RequestBody @Valid UserLoginDto userLoginDto,
-            HttpServletResponse response
+    public ResponseEntity<UserResponseLoginDto> login(
+            @RequestBody @Valid UserLoginDto userLoginDto
     ) {
         UserResponseLoginDto loginResponse = authenticationService.authenticate(userLoginDto);
 
@@ -39,9 +39,9 @@ public class AuthController {
                 .sameSite("Lax")
                 .build();
 
-        response.setHeader("Set-Cookie", cookie.toString());
-
-        return loginResponse;
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(loginResponse);
     }
 
     @PostMapping("/registration")
