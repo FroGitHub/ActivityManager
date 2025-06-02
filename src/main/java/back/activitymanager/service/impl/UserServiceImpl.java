@@ -83,4 +83,9 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDtoWithRole(user);
     }
 
+    @Override
+    public void deleteCurrentUser(Authentication authentication) {
+        userRepository.deleteByEmail(authentication.getName());
+    }
+
 }
