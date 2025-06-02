@@ -11,7 +11,6 @@ import jakarta.validation.Valid;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +25,7 @@ public class AuthController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponseLoginDto> login(
+    public UserResponseLoginDto login(
             @RequestBody @Valid UserLoginDto userLoginDto,
             HttpServletResponse response
     ) {
@@ -42,7 +41,7 @@ public class AuthController {
 
         response.setHeader("Set-Cookie", cookie.toString());
 
-        return ResponseEntity.ok().build();
+        return loginResponse;
     }
 
     @PostMapping("/registration")
