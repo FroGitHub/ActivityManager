@@ -7,12 +7,13 @@ import back.activitymanager.dto.user.UserUpdateRoleRequestDto;
 import back.activitymanager.dto.user.UserWithRoleDto;
 import back.activitymanager.exception.RegistrationException;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
-    public UserResponseDto register(UserRegistrationRequestDto userRegistrationRequestDto)
+    UserResponseDto register(UserRegistrationRequestDto userRegistrationRequestDto)
             throws RegistrationException;
 
-    UserWithRoleDto getMyUserInfo(Authentication authentication);
+    UserResponseDto getMyUserInfo(Authentication authentication);
 
     UserResponseDto updateUser(
             Authentication authentication,
@@ -21,4 +22,6 @@ public interface UserService {
     UserWithRoleDto updateUserRole(Long id, UserUpdateRoleRequestDto requestDto);
 
     void deleteCurrentUser(Authentication authentication);
+
+    UserResponseDto registerWithPhoto(UserRegistrationRequestDto request, MultipartFile photo);
 }

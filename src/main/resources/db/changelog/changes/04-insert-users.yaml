@@ -24,6 +24,9 @@ databaseChangeLog:
               - column:
                   name: last_name
                   value: "admin"
+              - column:
+                  name: photo_path
+                  value: "adminPhoto"
         - insert:
             tableName: users
             columns:
@@ -45,3 +48,6 @@ databaseChangeLog:
               - column:
                   name: last_name
                   value: "user"
+              - column:
+                  name: photo_path
+                  value: "userPhoto"

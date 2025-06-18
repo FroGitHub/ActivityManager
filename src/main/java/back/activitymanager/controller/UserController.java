@@ -1,6 +1,6 @@
 package back.activitymanager.controller;
 
-import back.activitymanager.dto.user.UserWithRoleDto;
+import back.activitymanager.dto.user.UserResponseDto;
 import back.activitymanager.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +25,7 @@ public class UserController {
     @Operation(summary = "Get info of current user")
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    public UserWithRoleDto getUser(Authentication authentication) {
+    public UserResponseDto getUser(Authentication authentication) {
         return userService.getMyUserInfo(authentication);
     }
 
