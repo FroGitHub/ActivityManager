@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<String> handlerDropboxException(DropboxProcessException ex) {
-        return new ResponseEntity<>("Dropbox problem",
+        return new ResponseEntity<>("Dropbox problem: " + ex.getMessage(),
                 HttpStatus.CONFLICT);
     }
 

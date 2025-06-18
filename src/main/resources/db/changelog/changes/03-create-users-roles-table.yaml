@@ -9,7 +9,6 @@ databaseChangeLog:
               - column:
                   name: user_id
                   type: BIGINT
-                  autoIncrement: true
                   constraints:
                     nullable: false
                     foreignKeyName: fk_users_roles_user

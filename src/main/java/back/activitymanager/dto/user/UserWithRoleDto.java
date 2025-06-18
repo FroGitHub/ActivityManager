@@ -7,6 +7,7 @@ import lombok.Data;
 public class UserWithRoleDto {
     private Long id;
     private String email;
+    private String photoPath;
     private String firstName;
     private String lastName;
     private String phoneNumber;

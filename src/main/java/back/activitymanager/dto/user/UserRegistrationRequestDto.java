@@ -2,9 +2,11 @@ package back.activitymanager.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 //@FieldMatches(fields = {"password", "repeatPassword"})
@@ -28,5 +30,7 @@ public class UserRegistrationRequestDto {
     @Pattern(regexp = "^\\+380\\d{9}$",
             message = "Invalid phone number format (expected +380XXXXXXXXX)")
     private String phoneNumber;
+    @NotNull
+    private MultipartFile file;
 
 }

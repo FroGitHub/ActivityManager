@@ -12,6 +12,7 @@ import back.activitymanager.model.Role;
 import back.activitymanager.model.User;
 import back.activitymanager.repository.RoleRepository;
 import back.activitymanager.repository.UserRepository;
+import back.activitymanager.service.DropboxService;
 import back.activitymanager.service.UserService;
 import java.util.Objects;
 import java.util.Set;
@@ -21,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -31,56 +33,70 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final DropboxService dropboxService;
 
     @Override
-    public UserResponseDto register(UserRegistrationRequestDto userRegistrationRequestDto) {
-        if (userRepository.existsByEmail(userRegistrationRequestDto.getEmail())) {
-            throw new RegistrationException(
-                    "User already exists with email: " + userRegistrationRequestDto.getEmail()
-            );
+    public UserResponseDto register(UserRegistrationRequestDto request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RegistrationException("User already exists with email: "
+                    + request.getEmail());
         }
-        User user = userMapper.toModel(userRegistrationRequestDto);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Role role = roleRepository.findByName(Role.RoleName.ROLE_USER)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Role is not found: " + Role.RoleName.ROLE_USER)
-                );
-        user.setRoles(Set.of(role));
 
-        return userMapper.toDto(userRepository.save(user));
+        MultipartFile photo = request.getFile();
+        return buildAndSaveUserWithPhoto(request, photo);
     }
 
     @Override
-    public UserWithRoleDto getMyUserInfo(Authentication authentication) {
-        return userMapper.toDtoWithRole((User) authentication.getPrincipal());
+    public UserResponseDto registerWithPhoto(UserRegistrationRequestDto request,
+                                             MultipartFile photo) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RegistrationException("User already exists with email: "
+                    + request.getEmail());
+        }
+
+        return buildAndSaveUserWithPhoto(request, photo);
     }
 
     @Override
-    public UserResponseDto updateUser(
-            Authentication authentication,
-            UserUpdateRequestDto requestDto) {
+    public UserResponseDto getMyUserInfo(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return mapUserToDtoWithPhoto(user);
+    }
+
+    @Override
+    public UserResponseDto updateUser(Authentication authentication,
+                                      UserUpdateRequestDto requestDto) {
         User user = (User) authentication.getPrincipal();
 
         userMapper.updateUser(user, requestDto);
-        if (Objects.equals(user.getPassword(), requestDto.getPassword())) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (!Objects.equals(user.getPassword(), requestDto.getPassword())) {
+            user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         }
 
-        return userMapper.toDto(userRepository.save(user));
+        user = userRepository.save(user);
+        return mapUserToDtoWithPhoto(user);
     }
 
     @Override
-    public UserWithRoleDto updateUserRole(Long id, UserUpdateRoleRequestDto requestDto) {
-        User user = userRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("There is no user with id: " + id));
+    public UserWithRoleDto updateUserRole(Long id,
+                                          UserUpdateRoleRequestDto requestDto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "There is no user with id: " + id));
 
         Set<Role> roles = requestDto.getRoles().stream()
                 .map(roleName -> roleRepository.findByName(roleName)
                         .orElseThrow(() -> new EntityNotFoundException(
-                                "There is no role with name: " + roleName)))
+                                "No role: " + roleName)))
                 .collect(Collectors.toSet());
         user.setRoles(roles);
-        return userMapper.toDtoWithRole(user);
+
+        UserWithRoleDto dto = userMapper.toDtoWithRole(user);
+        if (user.getPhotoPath() != null) {
+            dto.setPhotoPath(dropboxService.getPhotoLink(user.getPhotoPath()));
+        }
+
+        return dto;
     }
 
     @Override
@@ -88,4 +104,30 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteByEmail(authentication.getName());
     }
 
+    private UserResponseDto buildAndSaveUserWithPhoto(UserRegistrationRequestDto request,
+                                                      MultipartFile photo) {
+        User user = userMapper.toModel(request);
+
+        if (photo != null && !photo.isEmpty()) {
+            String photoPath = dropboxService.uploadPhoto(photo);
+            user.setPhotoPath(photoPath);
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        Role role = roleRepository.findByName(Role.RoleName.ROLE_USER)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Role is not found: ROLE_USER"));
+        user.setRoles(Set.of(role));
+
+        return mapUserToDtoWithPhoto(userRepository.save(user));
+    }
+
+    private UserResponseDto mapUserToDtoWithPhoto(User user) {
+        UserResponseDto dto = userMapper.toDto(user);
+        if (user.getPhotoPath() != null) {
+            dto.setPhotoPath(dropboxService.getPhotoLink(user.getPhotoPath()));
+        }
+        return dto;
+    }
 }
