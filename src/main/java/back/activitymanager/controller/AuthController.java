@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,9 +61,8 @@ public class AuthController {
                 .build();
     }
 
-    @PostMapping(value = "/registration", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public UserResponseDto register(@RequestBody @Valid UserRegistrationRequestDto request) {
+    @PostMapping(value = "/registration", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public UserResponseDto register(@ModelAttribute @Valid UserRegistrationRequestDto request) {
         return userService.register(request);
     }
-
 }
