@@ -24,13 +24,18 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: current_number_of_people
+                  name: number_of_people
                   type: int
                   constraints:
                     nullable: false
               - column:
-                  name: max_number_of_people
-                  type: int
+                  name: for_who
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: format
+                  type: VARCHAR(255)
                   constraints:
                     nullable: false
               - column:

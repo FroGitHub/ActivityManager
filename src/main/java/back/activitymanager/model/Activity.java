@@ -37,13 +37,16 @@ public class Activity {
     private String name;
 
     @Column(nullable = false)
-    private int maxNumberOfPeople;
+    private String forWho;
 
     @Column(nullable = false)
-    private int currentNumberOfPeople;
+    private int numberOfPeople;
 
     @Column(nullable = false)
     private String category;
+
+    @Column(nullable = false)
+    private String format;
 
     @NotNull
     @Column(nullable = false)
@@ -72,7 +75,7 @@ public class Activity {
         if (!participants.contains(user)) {
             participants.add(user);
             user.addActivity(this);
-            currentNumberOfPeople++;
+            numberOfPeople++;
         }
     }
 
@@ -80,7 +83,7 @@ public class Activity {
         if (participants.contains(user)) {
             participants.remove(user);
             user.removeActivity(this);
-            currentNumberOfPeople--;
+            numberOfPeople--;
         }
     }
 }
