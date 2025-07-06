@@ -24,8 +24,11 @@ public class ActivityCreateRequestDto {
     @NotBlank
     private String format;
 
-    @NotBlank
-    private String location;
+    @NotNull
+    private double lat;
+
+    @NotNull
+    private double lng;
 
     @NotNull
     private LocalDateTime localDateTime;

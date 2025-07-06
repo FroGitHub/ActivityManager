@@ -39,8 +39,13 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: location
-                  type: VARCHAR(255)
+                  name: lat
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: lng
+                  type: double
                   constraints:
                     nullable: false
               - column:

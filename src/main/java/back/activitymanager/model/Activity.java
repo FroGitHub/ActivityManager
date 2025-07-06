@@ -48,9 +48,11 @@ public class Activity {
     @Column(nullable = false)
     private String format;
 
-    @NotNull
     @Column(nullable = false)
-    private String location;
+    private double lat;
+
+    @Column(nullable = false)
+    private double lng;
 
     @Column(nullable = false)
     private LocalDateTime localDateTime;
