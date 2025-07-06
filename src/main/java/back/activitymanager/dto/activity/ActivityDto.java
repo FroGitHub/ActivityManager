@@ -7,20 +7,23 @@ import lombok.Data;
 
 @Data
 public class ActivityDto {
-
     private Long id;
 
     private String name;
 
-    private int maxNumberOfPeople;
+    private String forWho;
+
+    private int numberOfPeople;
 
     private int currentNumberOfPeople;
 
-    private LocalDateTime localDateTime;
-
     private String category;
 
+    private String format;
+
     private String location;
+
+    private LocalDateTime localDateTime;
 
     private UserWithoutRolesDto author;
 

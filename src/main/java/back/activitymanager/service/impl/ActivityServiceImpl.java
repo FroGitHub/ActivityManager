@@ -64,7 +64,7 @@ public class ActivityServiceImpl implements ActivityService {
         Activity activity = activityRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("There is no activity with id: " + id));
 
-        if (activity.getCurrentNumberOfPeople() == activity.getMaxNumberOfPeople()) {
+        if (activity.getNumberOfPeople() == activity.getParticipants().size()) {
             throw new NoAccessException("The room is full in the activity with id: " + id);
         }
 

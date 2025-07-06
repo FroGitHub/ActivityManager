@@ -12,18 +12,21 @@ public class ActivityCreateRequestDto {
     @NotBlank
     private String name;
 
-    @Min(1)
-    private int maxNumberOfPeople;
+    @NotBlank
+    private String forWho;
 
     @Min(0)
-    private int currentNumberOfPeople;
+    private int numberOfPeople;
 
-    @NotNull
-    private LocalDateTime localDateTime;
-
-    @NotNull
+    @NotBlank
     private String category;
 
     @NotBlank
+    private String format;
+
+    @NotBlank
     private String location;
+
+    @NotNull
+    private LocalDateTime localDateTime;
 }
