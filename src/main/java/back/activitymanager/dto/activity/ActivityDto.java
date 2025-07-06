@@ -21,7 +21,9 @@ public class ActivityDto {
 
     private String format;
 
-    private String location;
+    private double lat;
+
+    private double lng;
 
     private LocalDateTime localDateTime;
 
