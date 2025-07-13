@@ -28,7 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
+    private static final String DEFAULT_PHOTO_PATH = "default";
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
@@ -43,17 +43,6 @@ public class UserServiceImpl implements UserService {
         }
 
         MultipartFile photo = request.getFile();
-        return buildAndSaveUserWithPhoto(request, photo);
-    }
-
-    @Override
-    public UserResponseDto registerWithPhoto(UserRegistrationRequestDto request,
-                                             MultipartFile photo) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RegistrationException("User already exists with email: "
-                    + request.getEmail());
-        }
-
         return buildAndSaveUserWithPhoto(request, photo);
     }
 
@@ -111,6 +100,8 @@ public class UserServiceImpl implements UserService {
         if (photo != null && !photo.isEmpty()) {
             String photoPath = dropboxService.uploadPhoto(photo);
             user.setPhotoPath(photoPath);
+        } else {
+            user.setPhotoPath(DEFAULT_PHOTO_PATH);
         }
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -119,6 +110,15 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Role is not found: ROLE_USER"));
         user.setRoles(Set.of(role));
+
+        if (user.getPhotoPath().equals(DEFAULT_PHOTO_PATH)) {
+            UserResponseDto userResponseDto = userMapper
+                    .toDto(userRepository.save(user));
+
+            userResponseDto.setPhotoPath(DEFAULT_PHOTO_PATH);
+
+            return userResponseDto;
+        }
 
         return mapUserToDtoWithPhoto(userRepository.save(user));
     }
