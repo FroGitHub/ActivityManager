@@ -111,22 +111,16 @@ public class UserServiceImpl implements UserService {
                         "Role is not found: ROLE_USER"));
         user.setRoles(Set.of(role));
 
-        if (user.getPhotoPath().equals(DEFAULT_PHOTO_PATH)) {
-            UserResponseDto userResponseDto = userMapper
-                    .toDto(userRepository.save(user));
-
-            userResponseDto.setPhotoPath(DEFAULT_PHOTO_PATH);
-
-            return userResponseDto;
-        }
-
         return mapUserToDtoWithPhoto(userRepository.save(user));
     }
 
     private UserResponseDto mapUserToDtoWithPhoto(User user) {
         UserResponseDto dto = userMapper.toDto(user);
-        if (user.getPhotoPath() != null) {
+        if (user.getPhotoPath() != null
+                && !user.getPhotoPath().equals(DEFAULT_PHOTO_PATH)) {
             dto.setPhotoPath(dropboxService.getPhotoLink(user.getPhotoPath()));
+        } else {
+            dto.setPhotoPath("");
         }
         return dto;
     }
