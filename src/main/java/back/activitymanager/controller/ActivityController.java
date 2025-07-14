@@ -90,7 +90,7 @@ public class ActivityController {
     }
 
     @Operation(summary = "Get the activities current user participates")
-    @PostMapping("/meParticipating")
+    @PostMapping("/myParticipating")
     @PreAuthorize("hasRole('USER')")
     public Page<ActivityDto> getMeParticipating(Pageable pageable,
                                            Authentication authentication) {

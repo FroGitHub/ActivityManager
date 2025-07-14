@@ -15,3 +15,5 @@ databaseChangeLog:
       file: db/changelog/changes/07-create-users-activities-table.yaml
   - include:
       file: db/changelog/changes/08-insert-users-roles.yaml
+  - include:
+      file: db/changelog/changes/09-add-column-to-activities.yaml

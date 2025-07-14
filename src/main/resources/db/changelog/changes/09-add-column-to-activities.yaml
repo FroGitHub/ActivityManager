@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 09-add-column-to-activities
+      author: andriy
+      changes:
+        - addColumn:
+            tableName: activities
+            columns:
+              - column:
+                  name: img_id
+                  type: bigint
+                  constraints:
+                    nullable: false
