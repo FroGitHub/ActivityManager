@@ -31,5 +31,8 @@ public class ActivityCreateRequestDto {
     private double lng;
 
     @NotNull
+    private int imgId;
+
+    @NotNull
     private LocalDateTime localDateTime;
 }

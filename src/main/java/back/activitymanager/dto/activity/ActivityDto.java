@@ -25,6 +25,8 @@ public class ActivityDto {
 
     private double lng;
 
+    private int imgId;
+
     private LocalDateTime localDateTime;
 
     private UserWithoutRolesDto author;

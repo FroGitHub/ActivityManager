@@ -55,6 +55,9 @@ public class Activity {
     private double lng;
 
     @Column(nullable = false)
+    private int imgId;
+
+    @Column(nullable = false)
     private LocalDateTime localDateTime;
 
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
