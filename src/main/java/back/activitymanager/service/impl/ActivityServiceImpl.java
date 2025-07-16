@@ -28,7 +28,12 @@ public class ActivityServiceImpl implements ActivityService {
     public ActivityDto createActivity(Authentication authentication,
                                       ActivityCreateRequestDto createRequestDto) {
         Activity activity = activityMapper.toObjFromCreateRequest(createRequestDto);
-        activity.setAuthor((User) authentication.getPrincipal());
+
+        User user = (User) authentication.getPrincipal();
+
+        activity.setAuthor(user);
+        activity.getParticipants().add(user);
+
         return activityMapper.toDto(activityRepository.save(activity));
     }
 
