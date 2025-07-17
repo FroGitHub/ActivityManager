@@ -2,6 +2,7 @@ package back.activitymanager.service.impl;
 
 import back.activitymanager.exception.DropboxProcessException;
 import back.activitymanager.service.DropboxService;
+import back.activitymanager.service.UserService;
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.GetTemporaryLinkResult;
@@ -27,7 +28,7 @@ public class DropboxServiceImpl implements DropboxService {
 
         try (InputStream in = file.getInputStream()) {
             client.files().uploadBuilder(path).uploadAndFinish(in);
-            return path; // зберігаємо шлях (НЕ лінк!)
+            return path;
         } catch (Exception e) {
             throw new RuntimeException("Failed to upload photo", e);
         }
@@ -35,6 +36,11 @@ public class DropboxServiceImpl implements DropboxService {
 
     @Override
     public String getPhotoLink(String path) {
+
+        if (UserService.DEFAULT_PHOTO_PATH.equals(path)) {
+            return "";
+        }
+
         try {
             GetTemporaryLinkResult result = client.files().getTemporaryLink(path);
             return result.getLink();

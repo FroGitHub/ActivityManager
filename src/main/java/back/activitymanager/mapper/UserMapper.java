@@ -12,8 +12,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(config = MapperConfig.class)
+@Mapper(config = MapperConfig.class, uses = DropboxHelper.class)
 public interface UserMapper {
+
+    @Mapping(target = "photoPath", source = "photoPath", qualifiedByName = "resolvePhotoLink")
     UserResponseDto toDto(User user);
 
     User toModel(UserRegistrationRequestDto userRegistrationRequestDto);

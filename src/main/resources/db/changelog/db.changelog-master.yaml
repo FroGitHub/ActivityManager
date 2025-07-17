@@ -17,3 +17,5 @@ databaseChangeLog:
       file: db/changelog/changes/08-insert-users-roles.yaml
   - include:
       file: db/changelog/changes/09-add-column-to-activities.yaml
+  - include:
+      file: db/changelog/changes/10-update-users-photo-path.yaml

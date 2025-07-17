@@ -1,7 +1,8 @@
 package back.activitymanager.dto.activity;
 
-import back.activitymanager.dto.user.UserWithoutRolesDto;
+import back.activitymanager.dto.user.UserResponseDto;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 
@@ -29,7 +30,7 @@ public class ActivityDto {
 
     private LocalDateTime localDateTime;
 
-    private UserWithoutRolesDto author;
+    private UserResponseDto author;
 
-    private List<UserWithoutRolesDto> participants;
+    private List<UserResponseDto> participants = new ArrayList<>();
 }
