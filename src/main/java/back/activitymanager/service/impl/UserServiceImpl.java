@@ -79,12 +79,7 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toSet());
         user.setRoles(roles);
 
-        UserWithRoleDto dto = userMapper.toDtoWithRole(user);
-        if (user.getPhotoPath() != null) {
-            dto.setPhotoPath(dropboxService.getPhotoLink(user.getPhotoPath()));
-        }
-
-        return dto;
+        return userMapper.toDtoWithRole(user);
     }
 
     @Override
