@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(config = MapperConfig.class)
+@Mapper(config = MapperConfig.class, uses = {UserMapper.class})
 public interface ActivityMapper {
 
     @Mapping(target = "currentNumberOfPeople", ignore = true)

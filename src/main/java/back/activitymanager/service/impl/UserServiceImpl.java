@@ -28,7 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private static final String DEFAULT_PHOTO_PATH = "default";
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
@@ -49,7 +48,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto getMyUserInfo(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        return mapUserToDtoWithPhoto(user);
+        return userMapper.toDto(user);
     }
 
     @Override
@@ -63,7 +62,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user = userRepository.save(user);
-        return mapUserToDtoWithPhoto(user);
+        return userMapper.toDto(user);
     }
 
     @Override
@@ -111,17 +110,6 @@ public class UserServiceImpl implements UserService {
                         "Role is not found: ROLE_USER"));
         user.setRoles(Set.of(role));
 
-        return mapUserToDtoWithPhoto(userRepository.save(user));
-    }
-
-    private UserResponseDto mapUserToDtoWithPhoto(User user) {
-        UserResponseDto dto = userMapper.toDto(user);
-        if (user.getPhotoPath() != null
-                && !user.getPhotoPath().equals(DEFAULT_PHOTO_PATH)) {
-            dto.setPhotoPath(dropboxService.getPhotoLink(user.getPhotoPath()));
-        } else {
-            dto.setPhotoPath("");
-        }
-        return dto;
+        return userMapper.toDto(userRepository.save(user));
     }
 }

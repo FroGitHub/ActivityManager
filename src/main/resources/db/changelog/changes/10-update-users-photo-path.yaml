@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 10-update-users-photo-path
+      author: andriy
+      changes:
+        - update:
+            tableName: users
+            columns:
+              - column:
+                  name: photo_path
+                  value: "default"
+            where: "id in (1, 2)"

@@ -9,6 +9,9 @@ import back.activitymanager.exception.RegistrationException;
 import org.springframework.security.core.Authentication;
 
 public interface UserService {
+
+    String DEFAULT_PHOTO_PATH = "default";
+
     UserResponseDto register(UserRegistrationRequestDto userRegistrationRequestDto)
             throws RegistrationException;
 
