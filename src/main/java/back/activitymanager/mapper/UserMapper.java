@@ -21,6 +21,7 @@ public interface UserMapper {
     User toModel(UserRegistrationRequestDto userRegistrationRequestDto);
 
     @Mapping(target = "roleNames", ignore = true)
+    @Mapping(target = "photoPath", source = "photoPath", qualifiedByName = "resolvePhotoLink")
     UserWithRoleDto toDtoWithRole(User user);
 
     @AfterMapping
