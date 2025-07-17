@@ -44,6 +44,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public ActivityDto getById(Long id) {
+
         return activityMapper.toDto(activityRepository
                 .findById(id)
                 .orElseThrow(

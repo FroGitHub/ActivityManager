@@ -8,22 +8,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
     boolean existsByAuthor(User principal);
 
     @EntityGraph(attributePaths = {"participants", "author"})
-    @Query("SELECT a FROM Activity a WHERE a.isDeleted = false "
-            + "AND a.localDateTime > current_timestamp")
     Optional<Activity> findById(Long id);
 
+    @Query("SELECT a FROM Activity a JOIN a.author author "
+            + "WHERE a.isDeleted = false AND a.localDateTime > current_timestamp "
+            + "AND author.email = :email")
     @EntityGraph(attributePaths = {"participants", "author"})
-    @Query("SELECT a FROM Activity a WHERE a.isDeleted = false "
-            + "AND a.localDateTime > current_timestamp")
-    Page<Activity> findByAuthorEmail(Pageable pageable, String email);
+    Page<Activity> findByAuthorEmail(Pageable pageable, @Param("email") String email);
 
+    @Query("SELECT a FROM Activity a JOIN a.participants p "
+            + "WHERE a.isDeleted = false AND a.localDateTime > current_timestamp "
+            + "AND p.email = :email")
     @EntityGraph(attributePaths = {"participants", "author"})
-    @Query("SELECT a FROM Activity a WHERE a.isDeleted = false "
-            + "AND a.localDateTime > current_timestamp")
-    Page<Activity> findByParticipantsEmail(Pageable pageable, String name);
+    Page<Activity> findByParticipantsEmail(Pageable pageable, @Param("email") String email);
 }
