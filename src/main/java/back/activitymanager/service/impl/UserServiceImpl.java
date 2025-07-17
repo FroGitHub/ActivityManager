@@ -84,6 +84,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteCurrentUser(Authentication authentication) {
+        String photoPath = ((User) authentication.getPrincipal()).getPhotoPath();
+        if (!DEFAULT_PHOTO_PATH.equals(photoPath)) {
+            dropboxService.deletePhoto(photoPath);
+        }
         userRepository.deleteByEmail(authentication.getName());
     }
 
