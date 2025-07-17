@@ -125,12 +125,12 @@
 				<version>3.3.0</version>
 				<executions>
 					<!-- Turned off for Front -->
-<!--										<execution>-->
-<!--											<phase>compile</phase>-->
-<!--											<goals>-->
-<!--												<goal>check</goal>-->
-<!--											</goals>-->
-<!--										</execution>-->
+					<!--					<execution>-->
+					<!--						<phase>compile</phase>-->
+					<!--						<goals>-->
+					<!--							<goal>check</goal>-->
+					<!--						</goals>-->
+					<!--					</execution>-->
 				</executions>
 				<configuration>
 					<configLocation>${maven.checkstyle.plugin.configLocation}</configLocation>
