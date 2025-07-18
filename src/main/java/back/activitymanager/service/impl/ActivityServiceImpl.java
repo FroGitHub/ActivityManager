@@ -14,6 +14,10 @@ import back.activitymanager.repository.ActivityRepository;
 import back.activitymanager.repository.ActivitySpecification;
 import back.activitymanager.repository.UserRepository;
 import back.activitymanager.service.ActivityService;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.MonthDay;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +30,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ActivityServiceImpl implements ActivityService {
 
+    public static final String TOMORROW = "Завтра";
     private final ActivityRepository activityRepository;
     private final ActivityMapper activityMapper;
     private final UserRepository userRepository;
@@ -124,13 +129,29 @@ public class ActivityServiceImpl implements ActivityService {
                 .map(activityMapper::toDto);
     }
 
-    private static boolean searchActivityHelper(double lat, double lng, String local)
-            throws LocalNotFoundException {
+    private static boolean searchActivityHelper(double lat, double lng, String local) {
         try {
             return LocalAdaptorApi.isEtLocal(lat, lng, local);
         } catch (Exception e) {
             throw new LocalNotFoundException("Local is not found: " + local);
         }
+    }
+
+    private static LocalDateTime mapToLocalDateTime(String dateStr) {
+
+        if (dateStr == null) {
+            return null;
+        }
+
+        if (TOMORROW.equals(dateStr)) {
+            return LocalDateTime.now().plusDays(1L);
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d.MM");
+        MonthDay monthDay = MonthDay.parse(dateStr, formatter);
+        LocalDate date = monthDay.atYear(LocalDate.now().getYear());
+
+        return date.atStartOfDay();
     }
 
     @Override
@@ -140,15 +161,20 @@ public class ActivityServiceImpl implements ActivityService {
                 .where(ActivitySpecification.hasForWho(activitySearchDto.getForWho()))
                 .and(ActivitySpecification.hasCategory(activitySearchDto.getCategory()))
                 .and(ActivitySpecification.hasFormat(activitySearchDto.getFormat()))
-                .and(ActivitySpecification.afterDate(activitySearchDto.getDateTime()));
+                .and(ActivitySpecification.afterDate(mapToLocalDateTime(
+                        activitySearchDto.getDateTime())));
 
-        List<Activity> all = activityRepository.findAll(spec)
-                .stream()
-                .filter(a -> searchActivityHelper(a.getLat(),
-                        a.getLng(), activitySearchDto.getLocal()))
-                .toList();
+        List<Activity> result = activityRepository.findAll(spec);
 
-        return all.stream().map(activityMapper::toDto).toList();
+        if (activitySearchDto.getLocal() != null) {
+            return result.stream()
+                    .filter(a -> searchActivityHelper(a.getLat(),
+                            a.getLng(), activitySearchDto.getLocal()))
+                    .map(activityMapper::toDto)
+                    .toList();
+        }
+
+        return result.stream().map(activityMapper::toDto).toList();
     }
 
 }
