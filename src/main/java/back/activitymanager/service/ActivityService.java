@@ -2,6 +2,8 @@ package back.activitymanager.service;
 
 import back.activitymanager.dto.activity.ActivityCreateRequestDto;
 import back.activitymanager.dto.activity.ActivityDto;
+import back.activitymanager.dto.activity.ActivitySearchDto;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -24,4 +26,6 @@ public interface ActivityService {
                                       Authentication authentication);
 
     Page<ActivityDto> getMeParticipating(Pageable pageable, Authentication authentication);
+
+    List<ActivityDto> searchActivity(ActivitySearchDto activitySearchDto);
 }

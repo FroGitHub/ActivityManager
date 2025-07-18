@@ -2,10 +2,12 @@ package back.activitymanager.controller;
 
 import back.activitymanager.dto.activity.ActivityCreateRequestDto;
 import back.activitymanager.dto.activity.ActivityDto;
+import back.activitymanager.dto.activity.ActivitySearchDto;
 import back.activitymanager.service.ActivityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -96,4 +98,12 @@ public class ActivityController {
                                            Authentication authentication) {
         return activityService.getMeParticipating(pageable, authentication);
     }
+
+    @Operation(summary = "Search activity")
+    @PostMapping("/search")
+    @PreAuthorize("hasRole('USER')")
+    public List<ActivityDto> searchActivity(ActivitySearchDto activitySearchDto) {
+        return activityService.searchActivity(activitySearchDto);
+    }
+
 }
