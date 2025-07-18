@@ -78,4 +78,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body("No access: " + ex.getMessage());
     }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleLocalNotFoundException(
+            LocalNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body("Local error: " + ex.getMessage());
+    }
 }

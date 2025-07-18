@@ -22,9 +22,7 @@ public class ActivityDto {
 
     private String format;
 
-    private double lat;
-
-    private double lng;
+    private String local;
 
     private int imgId;
 

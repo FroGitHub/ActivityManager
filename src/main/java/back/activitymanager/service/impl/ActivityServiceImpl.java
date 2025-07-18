@@ -1,18 +1,24 @@
 package back.activitymanager.service.impl;
 
+import back.activitymanager.api.LocalAdaptorApi;
 import back.activitymanager.dto.activity.ActivityCreateRequestDto;
 import back.activitymanager.dto.activity.ActivityDto;
+import back.activitymanager.dto.activity.ActivitySearchDto;
 import back.activitymanager.exception.EntityNotFoundException;
+import back.activitymanager.exception.LocalNotFoundException;
 import back.activitymanager.exception.NoAccessException;
 import back.activitymanager.mapper.ActivityMapper;
 import back.activitymanager.model.Activity;
 import back.activitymanager.model.User;
 import back.activitymanager.repository.ActivityRepository;
+import back.activitymanager.repository.ActivitySpecification;
 import back.activitymanager.repository.UserRepository;
 import back.activitymanager.service.ActivityService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +50,6 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public ActivityDto getById(Long id) {
-
         return activityMapper.toDto(activityRepository
                 .findById(id)
                 .orElseThrow(
@@ -117,6 +122,33 @@ public class ActivityServiceImpl implements ActivityService {
         return activityRepository
                 .findByParticipantsEmail(pageable, authentication.getName())
                 .map(activityMapper::toDto);
+    }
+
+    private static boolean searchActivityHelper(double lat, double lng, String local)
+            throws LocalNotFoundException {
+        try {
+            return LocalAdaptorApi.isEtLocal(lat, lng, local);
+        } catch (Exception e) {
+            throw new LocalNotFoundException("Local is not found: " + local);
+        }
+    }
+
+    @Override
+    public List<ActivityDto> searchActivity(ActivitySearchDto activitySearchDto) {
+
+        Specification<Activity> spec = Specification
+                .where(ActivitySpecification.hasForWho(activitySearchDto.getForWho()))
+                .and(ActivitySpecification.hasCategory(activitySearchDto.getCategory()))
+                .and(ActivitySpecification.hasFormat(activitySearchDto.getFormat()))
+                .and(ActivitySpecification.afterDate(activitySearchDto.getDateTime()));
+
+        List<Activity> all = activityRepository.findAll(spec)
+                .stream()
+                .filter(a -> searchActivityHelper(a.getLat(),
+                        a.getLng(), activitySearchDto.getLocal()))
+                .toList();
+
+        return all.stream().map(activityMapper::toDto).toList();
     }
 
 }
