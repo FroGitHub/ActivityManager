@@ -45,7 +45,6 @@ public class ActivityController {
 
     @Operation(summary = "Get all activities")
     @PostMapping
-    @PreAuthorize("hasRole('USER')")
     public Page<ActivityDto> getAll(Pageable pageable) {
         return activityService.getAll(pageable);
     }
