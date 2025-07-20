@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: 11-create-reviews-table
+      author: andriy
+      changes:
+        - createTable:
+            tableName: reviews
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: comment
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rate
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    foreignKeyName: fk_reviews_user
+                    references: users(id)
+                    nullable: false
+                    deleteCascade: true
+              - column:
+                  name: date_time
+                  type: datetime(6)
+                  constraints:
+                    nullable: false
+
+
