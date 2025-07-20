@@ -64,9 +64,20 @@ public class User implements UserDetails {
     @ManyToMany(mappedBy = "participants", cascade = CascadeType.PERSIST)
     private List<Activity> participatingActivities = new ArrayList<>();
 
+    @Setter(AccessLevel.PRIVATE)
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Review> reviews = new ArrayList<>();
+
     public void addActivity(Activity activity) {
         if (!participatingActivities.contains(activity)) {
             participatingActivities.add(activity);
+        }
+    }
+
+    public void addReview(Review review) {
+        if (review != null) {
+            review.setUser(this);
+            reviews.add(review);
         }
     }
 
