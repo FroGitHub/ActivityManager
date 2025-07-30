@@ -3,6 +3,8 @@ package back.activitymanager.controller;
 import back.activitymanager.dto.review.ReviewCreateRequestDto;
 import back.activitymanager.dto.review.ReviewDto;
 import back.activitymanager.service.ReviewService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,10 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/review")
+@Tag(name = "Review", description =
+        "User can see a reviews and add a new reviews")
 public class ReviewController {
 
     private final ReviewService reviewService;
 
+    @Operation(summary = "Create a review")
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     public ReviewDto createReview(Authentication authentication,
@@ -30,6 +35,7 @@ public class ReviewController {
         return reviewService.createReview(authentication, requestDto);
     }
 
+    @Operation(summary = "Get all reviews")
     @GetMapping
     public Page<ReviewDto> getReviews(Pageable pageable) {
         return reviewService.getReviews(pageable);
