@@ -19,3 +19,5 @@ databaseChangeLog:
       file: db/changelog/changes/09-add-column-to-activities.yaml
   - include:
       file: db/changelog/changes/10-update-users-photo-path.yaml
+  - include:
+      file: db/changelog/changes/11-create-reviews-table.yaml
