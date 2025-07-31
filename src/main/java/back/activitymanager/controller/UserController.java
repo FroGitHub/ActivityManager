@@ -3,6 +3,7 @@ package back.activitymanager.controller;
 import back.activitymanager.dto.user.UserResponseDto;
 import back.activitymanager.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ public class UserController {
     @Operation(summary = "Get info of current user")
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
+    @SecurityRequirement(name = "Bearer")
     public UserResponseDto getUser(Authentication authentication) {
         return userService.getMyUserInfo(authentication);
     }
@@ -33,6 +35,7 @@ public class UserController {
     @Operation(summary = "Delete current user")
     @DeleteMapping("/deleteMe")
     @PreAuthorize("hasRole('USER')")
+    @SecurityRequirement(name = "Bearer")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCurrentUser(Authentication authentication) {
         userService.deleteCurrentUser(authentication);
