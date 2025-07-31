@@ -5,6 +5,7 @@ import back.activitymanager.dto.activity.ActivityDto;
 import back.activitymanager.dto.activity.ActivitySearchDto;
 import back.activitymanager.service.ActivityService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -34,6 +35,7 @@ public class ActivityController {
     @Operation(summary = "Create activity", description = "User can create activity")
     @PostMapping("/create")
     @PreAuthorize("hasRole('USER')")
+    @SecurityRequirement(name = "Bearer")
     @ResponseStatus(HttpStatus.CREATED)
     public ActivityDto createActivity(
             Authentication authentication,
@@ -52,6 +54,7 @@ public class ActivityController {
     @Operation(summary = "Get activity by id")
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
+    @SecurityRequirement(name = "Bearer")
     public ActivityDto getById(@PathVariable Long id) {
         return activityService.getById(id);
     }
@@ -61,6 +64,7 @@ public class ActivityController {
                     + "user will not able to delete it")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
+    @SecurityRequirement(name = "Bearer")
     public void deleteById(Authentication authentication,
                            @PathVariable Long id) {
         activityService.deleteById(authentication, id);
@@ -69,6 +73,7 @@ public class ActivityController {
     @Operation(summary = "Take part in an event")
     @PostMapping("/participate/{id}")
     @PreAuthorize("hasRole('USER')")
+    @SecurityRequirement(name = "Bearer")
     public ActivityDto participate(Authentication authentication,
                                    @PathVariable Long id) {
         return activityService.participateInActivity(authentication, id);
@@ -77,6 +82,7 @@ public class ActivityController {
     @Operation(summary = "Refuse to participate")
     @PostMapping("/refuse/{id}")
     @PreAuthorize("hasRole('USER')")
+    @SecurityRequirement(name = "Bearer")
     public ActivityDto refuse(Authentication authentication,
                                    @PathVariable Long id) {
         return activityService.refuseInActivity(authentication, id);
@@ -85,6 +91,7 @@ public class ActivityController {
     @Operation(summary = "Get the activities created by current user")
     @PostMapping("/myActivities")
     @PreAuthorize("hasRole('USER')")
+    @SecurityRequirement(name = "Bearer")
     public Page<ActivityDto> getMyActivity(Pageable pageable,
                                            Authentication authentication) {
         return activityService.getMyActivities(pageable, authentication);
@@ -93,6 +100,7 @@ public class ActivityController {
     @Operation(summary = "Get the activities current user participates")
     @PostMapping("/myParticipating")
     @PreAuthorize("hasRole('USER')")
+    @SecurityRequirement(name = "Bearer")
     public Page<ActivityDto> getMeParticipating(Pageable pageable,
                                            Authentication authentication) {
         return activityService.getMeParticipating(pageable, authentication);
@@ -101,6 +109,7 @@ public class ActivityController {
     @Operation(summary = "Search activity")
     @PostMapping("/search")
     @PreAuthorize("hasRole('USER')")
+    @SecurityRequirement(name = "Bearer")
     public List<ActivityDto> searchActivity(ActivitySearchDto activitySearchDto) {
         return activityService.searchActivity(activitySearchDto);
     }

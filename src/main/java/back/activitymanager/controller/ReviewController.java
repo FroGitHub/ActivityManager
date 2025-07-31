@@ -4,6 +4,7 @@ import back.activitymanager.dto.review.ReviewCreateRequestDto;
 import back.activitymanager.dto.review.ReviewDto;
 import back.activitymanager.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class ReviewController {
     @Operation(summary = "Create a review")
     @PostMapping
     @PreAuthorize("hasRole('USER')")
+    @SecurityRequirement(name = "Bearer")
     public ReviewDto createReview(Authentication authentication,
                                   @Valid @RequestBody
                                   ReviewCreateRequestDto requestDto) {
