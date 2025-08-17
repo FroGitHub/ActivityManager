@@ -20,13 +20,18 @@ public interface ActivityRepository extends JpaRepository<Activity, Long>,
     Optional<Activity> findById(Long id);
 
     @Query("SELECT a FROM Activity a JOIN a.author author "
-            + "WHERE a.isDeleted = false AND a.localDateTime > current_timestamp "
+            + "WHERE a.isDeleted = false AND a.localDateTime > CURRENT_TIMESTAMP")
+    @EntityGraph(attributePaths = {"participants", "author"})
+    Page<Activity> findAll(Pageable pageable);
+
+    @Query("SELECT a FROM Activity a JOIN a.author author "
+            + "WHERE a.isDeleted = false AND a.localDateTime > CURRENT_TIMESTAMP "
             + "AND author.email = :email")
     @EntityGraph(attributePaths = {"participants", "author"})
     Page<Activity> findByAuthorEmail(Pageable pageable, @Param("email") String email);
 
     @Query("SELECT a FROM Activity a JOIN a.participants p "
-            + "WHERE a.isDeleted = false AND a.localDateTime > current_timestamp "
+            + "WHERE a.isDeleted = false AND a.localDateTime > CURRENT_TIMESTAMP "
             + "AND p.email = :email")
     @EntityGraph(attributePaths = {"participants", "author"})
     Page<Activity> findByParticipantsEmail(Pageable pageable, @Param("email") String email);

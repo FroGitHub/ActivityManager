@@ -3,6 +3,7 @@ package back.activitymanager.api;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class LocationApi {
+class LocationApi {
 
     private static final int EARTH_RADIUS_KM = 6371;
     private static final String CITY = "Київ";
@@ -20,6 +21,9 @@ public class LocationApi {
     private static final double DEFAULT_RADIUS_KM = 5;
     private static final String USER_AGENT = "YourApp";
     private static final String NOMINATIM_URL = "https://nominatim.openstreetmap.org/";
+
+    private LocationApi() {
+    }
 
     public static boolean isWithinRadius(double lat1, double lon1,
                                          double lat2, double lon2,
@@ -89,7 +93,9 @@ public class LocationApi {
     }
 
     private static String getResponseFromUrl(String urlString) throws IOException {
-        URL url = new URL(urlString);
+        URI uri = URI.create(urlString);
+        URL url = uri.toURL();
+
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestProperty("User-Agent", USER_AGENT);
 
